@@ -38,7 +38,9 @@
     "validate:phase2": "node scripts/validate-phase.js FASE_2",
     "validate:all": "node scripts/validate-phase.js all",
     "git:setup": "node scripts/setup-git-workflow.js",
-    "git:validate": "node scripts/setup-git-workflow.js --validate"
+    "git:validate": "node scripts/setup-git-workflow.js --validate",
+    "git:sync": "node scripts/sync-github.js",
+    "github:create": "echo 'Consulte scripts/create-github-repo.md para instruções'"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",

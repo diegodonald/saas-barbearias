@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
-import { LogOut, User, Settings, Calendar, BarChart3 } from 'lucide-react';
+import { LogOut, User, Settings, Calendar, BarChart3, Scissors } from 'lucide-react';
 
 const DashboardPage: React.FC = () => {
   const { user, logout } = useAuth();
@@ -178,6 +179,13 @@ const DashboardPage: React.FC = () => {
                 <Button variant="outline" fullWidth leftIcon={<Calendar size={18} />}>
                   Novo Agendamento
                 </Button>
+                {(user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') && (
+                  <Link to="/barbershops">
+                    <Button variant="outline" fullWidth leftIcon={<Scissors size={18} />}>
+                      Gerenciar Barbearias
+                    </Button>
+                  </Link>
+                )}
                 <Button variant="outline" fullWidth leftIcon={<User size={18} />}>
                   Gerenciar Perfil
                 </Button>
