@@ -135,14 +135,15 @@ export class MonitoringController {
    */
   static async getRecentLogs(req: Request, res: Response<ApiResponse>) {
     try {
-      const level = req.query['level'] as string ?? 'info';
+      const level = (req.query['level'] as string) ?? 'info';
       const limit = parseInt(req.query['limit'] as string) || 100;
 
       // Simular obtenção de logs (em produção, isso viria de um sistema de logs centralizado)
       const logs = {
         level,
         limit,
-        message: 'Em produção, isso retornaria logs reais de um sistema como ELK Stack ou CloudWatch',
+        message:
+          'Em produção, isso retornaria logs reais de um sistema como ELK Stack ou CloudWatch',
         timestamp: new Date().toISOString(),
       };
 
@@ -178,11 +179,11 @@ export class MonitoringController {
       const memoryUsage = process.memoryUsage();
       const cpuUsage = process.cpuUsage();
       const uptime = process.uptime();
-      
+
       // Verificar saúde dos serviços
       const services = {
         database: 'healthy', // Em produção, verificar conexão real
-        redis: 'healthy',    // Em produção, verificar conexão real
+        redis: 'healthy', // Em produção, verificar conexão real
         external_apis: 'healthy', // Verificar APIs externas
       };
 

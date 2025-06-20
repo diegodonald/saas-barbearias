@@ -17,7 +17,7 @@ export class AuthController {
    * POST /api/auth/register
    */
   static async register(
-    req: Request<{}, ApiResponse, RegisterRequest>,
+    req: Request<Record<string, never>, ApiResponse, RegisterRequest>,
     res: Response<ApiResponse>
   ): Promise<void> {
     try {
@@ -64,7 +64,7 @@ export class AuthController {
    * POST /api/auth/login
    */
   static async login(
-    req: Request<{}, ApiResponse, LoginRequest>,
+    req: Request<Record<string, never>, ApiResponse, LoginRequest>,
     res: Response<ApiResponse>
   ): Promise<void> {
     try {
@@ -111,7 +111,7 @@ export class AuthController {
    * POST /api/auth/refresh
    */
   static async refreshToken(
-    req: Request<{}, ApiResponse, { refreshToken: string }>,
+    req: Request<Record<string, never>, ApiResponse, { refreshToken: string }>,
     res: Response<ApiResponse>
   ): Promise<void> {
     try {
@@ -168,7 +168,7 @@ export class AuthController {
    * POST /api/auth/forgot-password
    */
   static async forgotPassword(
-    req: Request<{}, ApiResponse, ForgotPasswordRequest>,
+    req: Request<Record<string, never>, ApiResponse, ForgotPasswordRequest>,
     res: Response<ApiResponse>
   ): Promise<void> {
     try {
@@ -194,7 +194,7 @@ export class AuthController {
    * POST /api/auth/reset-password
    */
   static async resetPassword(
-    req: Request<{}, ApiResponse, ResetPasswordRequest>,
+    req: Request<Record<string, never>, ApiResponse, ResetPasswordRequest>,
     res: Response<ApiResponse>
   ): Promise<void> {
     try {
@@ -240,7 +240,7 @@ export class AuthController {
    * POST /api/auth/change-password
    */
   static async changePassword(
-    req: Request<{}, ApiResponse, ChangePasswordRequest>,
+    req: Request<Record<string, never>, ApiResponse, ChangePasswordRequest>,
     res: Response<ApiResponse>
   ): Promise<void> {
     try {
@@ -295,7 +295,7 @@ export class AuthController {
    * PUT /api/auth/profile
    */
   static async updateProfile(
-    req: Request<{}, ApiResponse, UpdateProfileRequest>,
+    req: Request<Record<string, never>, ApiResponse, UpdateProfileRequest>,
     res: Response<ApiResponse>
   ): Promise<void> {
     try {

@@ -50,10 +50,15 @@ describe('CacheService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     cacheService.resetStats();
-    
+
     // Obter instância mockada do Redis
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const Redis = require('ioredis');
     mockRedis = new Redis();
+
+    // Simular que o Redis está disponível
+    const redisModule = require('../config/redis');
+    redisModule.redis = mockRedis;
   });
 
   describe('get', () => {
@@ -260,7 +265,7 @@ describe('CacheService', () => {
     it('deve obter múltiplos valores', async () => {
       const data1 = JSON.stringify({ data: { id: 1 }, timestamp: Date.now(), version: '1.0' });
       const data2 = JSON.stringify({ data: { id: 2 }, timestamp: Date.now(), version: '1.0' });
-      
+
       mockRedis.mget.mockResolvedValue([data1, data2, null]);
 
       const result = await cacheService.getMultiple(['key1', 'key2', 'key3']);
@@ -305,7 +310,7 @@ describe('CacheService', () => {
     it('deve resetar estatísticas', () => {
       // Simular algumas operações para gerar estatísticas
       cacheService.resetStats();
-      
+
       const stats = cacheService.getStats();
       expect(stats.hits).toBe(0);
       expect(stats.misses).toBe(0);

@@ -25,9 +25,9 @@ const prisma = new PrismaClient({
 
 // Event listeners para logging
 prisma.$on('query', (e) => {
-  logger.debug('Query: ' + e.query);
-  logger.debug('Params: ' + e.params);
-  logger.debug('Duration: ' + e.duration + 'ms');
+  logger.debug(`Query: ${e.query}`);
+  logger.debug(`Params: ${e.params}`);
+  logger.debug(`Duration: ${e.duration}ms`);
 });
 
 prisma.$on('error', (e) => {

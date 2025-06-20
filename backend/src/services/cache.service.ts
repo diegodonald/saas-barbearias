@@ -70,6 +70,11 @@ class CacheService {
    * Obter valor do cache
    */
   async get<T>(key: string, options: CacheOptions = {}): Promise<T | null> {
+    if (!redis) {
+      this.stats.misses++;
+      return null;
+    }
+
     try {
       const cacheKey = this.generateKey(key, options.prefix);
       const cached = await redis.get(cacheKey);
@@ -82,9 +87,9 @@ class CacheService {
 
       this.stats.hits++;
       const data = this.deserialize<T>(cached);
-      
-      advancedLogger.debug('Cache hit', { 
-        metadata: { key: cacheKey, hasData: data !== null } 
+
+      advancedLogger.debug('Cache hit', {
+        metadata: { key: cacheKey, hasData: data !== null },
       });
 
       return data;
@@ -100,11 +105,11 @@ class CacheService {
   /**
    * Definir valor no cache
    */
-  async set(
-    key: string,
-    value: any,
-    options: CacheOptions = {}
-  ): Promise<boolean> {
+  async set(key: string, value: any, options: CacheOptions = {}): Promise<boolean> {
+    if (!redis) {
+      return false;
+    }
+
     try {
       const cacheKey = this.generateKey(key, options.prefix);
       const ttl = options.ttl ?? CACHE_TTL.MEDIUM;
@@ -135,6 +140,10 @@ class CacheService {
    * Deletar valor do cache
    */
   async delete(key: string, options: CacheOptions = {}): Promise<boolean> {
+    if (!redis) {
+      return false;
+    }
+
     try {
       const cacheKey = this.generateKey(key, options.prefix);
       const result = await redis.del(cacheKey);
@@ -158,6 +167,10 @@ class CacheService {
    * Verificar se chave existe no cache
    */
   async exists(key: string, options: CacheOptions = {}): Promise<boolean> {
+    if (!redis) {
+      return false;
+    }
+
     try {
       const cacheKey = this.generateKey(key, options.prefix);
       const result = await redis.exists(cacheKey);
@@ -175,6 +188,10 @@ class CacheService {
    * Obter TTL de uma chave
    */
   async getTTL(key: string, options: CacheOptions = {}): Promise<number> {
+    if (!redis) {
+      return -1;
+    }
+
     try {
       const cacheKey = this.generateKey(key, options.prefix);
       return await redis.ttl(cacheKey);
@@ -191,6 +208,10 @@ class CacheService {
    * Invalidar cache por padrão
    */
   async invalidatePattern(pattern: string, prefix?: string): Promise<number> {
+    if (!redis) {
+      return 0;
+    }
+
     try {
       const searchPattern = this.generateKey(pattern, prefix);
       const keys = await redis.keys(searchPattern);
@@ -200,7 +221,7 @@ class CacheService {
       }
 
       const result = await redis.del(...keys);
-      
+
       advancedLogger.info('Cache invalidado por padrão', {
         metadata: { pattern: searchPattern, keysDeleted: result },
       });
@@ -219,6 +240,10 @@ class CacheService {
    * Limpar todo o cache
    */
   async clear(): Promise<boolean> {
+    if (!redis) {
+      return false;
+    }
+
     try {
       await redis.flushdb();
       advancedLogger.warn('Cache completamente limpo');
@@ -237,8 +262,17 @@ class CacheService {
     keys: string[],
     options: CacheOptions = {}
   ): Promise<Record<string, T | null>> {
+    if (!redis) {
+      const result: Record<string, T | null> = {};
+      keys.forEach(key => {
+        result[key] = null;
+        this.stats.misses++;
+      });
+      return result;
+    }
+
     try {
-      const cacheKeys = keys.map(key => this.generateKey(key, options.prefix));
+      const cacheKeys = keys.map((key) => this.generateKey(key, options.prefix));
       const values = await redis.mget(...cacheKeys);
 
       const result: Record<string, T | null> = {};
@@ -265,10 +299,11 @@ class CacheService {
   /**
    * Definir múltiplos valores no cache
    */
-  async setMultiple(
-    data: Record<string, any>,
-    options: CacheOptions = {}
-  ): Promise<boolean> {
+  async setMultiple(data: Record<string, any>, options: CacheOptions = {}): Promise<boolean> {
+    if (!redis) {
+      return false;
+    }
+
     try {
       const pipeline = redis.pipeline();
       const ttl = options.ttl ?? CACHE_TTL.MEDIUM;
@@ -323,12 +358,16 @@ class CacheService {
    * Obter informações do Redis
    */
   async getRedisInfo(): Promise<Record<string, string>> {
+    if (!redis) {
+      return {};
+    }
+
     try {
       const info = await redis.info();
       const lines = info.split('\r\n');
       const result: Record<string, string> = {};
 
-      lines.forEach(line => {
+      lines.forEach((line) => {
         if (line.includes(':') && !line.startsWith('#')) {
           const [key, value] = line.split(':');
           if (key && value) {

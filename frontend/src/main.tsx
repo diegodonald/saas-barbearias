@@ -5,10 +5,7 @@ import './index.css';
 
 // Configurações de desenvolvimento
 if (import.meta.env.DEV) {
-  // Habilitar React DevTools
-  if (typeof window !== 'undefined') {
-    window.__REACT_DEVTOOLS_GLOBAL_HOOK__?.onCommitFiberRoot;
-  }
+  // React DevTools será habilitado automaticamente em desenvolvimento
 }
 
 // Configurações de produção

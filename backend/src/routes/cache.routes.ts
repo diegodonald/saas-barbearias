@@ -165,12 +165,7 @@ router.post(
  *       403:
  *         description: Acesso negado - apenas super admins
  */
-router.post(
-  '/clear/all',
-  authenticate,
-  requireRole([Role.SUPER_ADMIN]),
-  CacheController.clearAll
-);
+router.post('/clear/all', authenticate, requireRole([Role.SUPER_ADMIN]), CacheController.clearAll);
 
 /**
  * @swagger
@@ -279,12 +274,7 @@ router.get(
   CacheController.getValue
 );
 
-router.put(
-  '/key/:key',
-  authenticate,
-  requireRole([Role.SUPER_ADMIN]),
-  CacheController.setValue
-);
+router.put('/key/:key', authenticate, requireRole([Role.SUPER_ADMIN]), CacheController.setValue);
 
 router.delete(
   '/key/:key',

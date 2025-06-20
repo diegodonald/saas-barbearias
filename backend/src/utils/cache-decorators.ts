@@ -16,11 +16,7 @@ export interface CacheableOptions extends CacheOptions {
  * Decorator para cache de métodos
  */
 export function Cacheable(options: CacheableOptions = {}) {
-  return function (
-    target: any,
-    propertyName: string,
-    descriptor: PropertyDescriptor
-  ) {
+  return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {
     const method = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {
@@ -86,25 +82,23 @@ export function Cacheable(options: CacheableOptions = {}) {
 /**
  * Decorator para invalidação de cache
  */
-export function CacheEvict(options: {
-  key?: string;
-  pattern?: string;
-  prefix?: string;
-  allEntries?: boolean;
-} = {}) {
-  return function (
-    target: any,
-    propertyName: string,
-    descriptor: PropertyDescriptor
-  ) {
+export function CacheEvict(
+  options: {
+    key?: string;
+    pattern?: string;
+    prefix?: string;
+    allEntries?: boolean;
+  } = {}
+) {
+  return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {
     const method = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {
-      try {
-        // Executar método original primeiro
-        const result = await method.apply(this, args);
+      // Executar método original primeiro
+      const result = await method.apply(this, args);
 
-        // Invalidar cache após sucesso
+      // Invalidar cache após sucesso
+      try {
         if (options.allEntries) {
           await cacheService.clear();
           advancedLogger.info('Cache completamente invalidado', {
@@ -113,26 +107,31 @@ export function CacheEvict(options: {
         } else if (options.pattern) {
           await cacheService.invalidatePattern(options.pattern, options.prefix);
           advancedLogger.info('Cache invalidado por padrão', {
-            metadata: { 
+            metadata: {
               method: `${target.constructor.name}.${propertyName}`,
-              pattern: options.pattern 
+              pattern: options.pattern,
             },
           });
         } else if (options.key) {
           await cacheService.delete(options.key, { prefix: options.prefix });
           advancedLogger.info('Cache invalidado por chave', {
-            metadata: { 
+            metadata: {
               method: `${target.constructor.name}.${propertyName}`,
-              key: options.key 
+              key: options.key,
             },
           });
         }
-
-        return result;
-      } catch (error) {
-        // Em caso de erro, não invalidar cache
-        throw error;
+      } catch (cacheError) {
+        // Log do erro de cache, mas não falhar a operação principal
+        advancedLogger.warn('Erro ao invalidar cache', {
+          metadata: {
+            method: `${target.constructor.name}.${propertyName}`,
+            error: (cacheError as Error).message
+          }
+        });
       }
+
+      return result;
     };
 
     return descriptor;
@@ -143,11 +142,7 @@ export function CacheEvict(options: {
  * Decorator para cache com atualização automática
  */
 export function CachePut(options: CacheableOptions = {}) {
-  return function (
-    target: any,
-    propertyName: string,
-    descriptor: PropertyDescriptor
-  ) {
+  return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {
     const method = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {
@@ -190,7 +185,7 @@ export function generateCacheKey(
   prefix: string,
   ...params: (string | number | boolean | object)[]
 ): string {
-  const keyParts = params.map(param => {
+  const keyParts = params.map((param) => {
     if (typeof param === 'object') {
       return JSON.stringify(param);
     }
@@ -249,20 +244,16 @@ export async function withCacheLock<T>(
     }
 
     // Tentar adquirir lock
-    const lockAcquired = await cacheService.set(
-      lockKey,
-      'locked',
-      { ...options, ttl: lockTtl }
-    );
+    const lockAcquired = await cacheService.set(lockKey, 'locked', { ...options, ttl: lockTtl });
 
     if (!lockAcquired) {
       // Se não conseguiu o lock, aguardar um pouco e tentar cache novamente
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
       const cachedAfterWait = await cacheService.get<T>(key, options);
       if (cachedAfterWait !== null) {
         return cachedAfterWait;
       }
-      
+
       // Se ainda não tem no cache, executar sem lock
       return await fetcher();
     }

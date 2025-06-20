@@ -5,10 +5,13 @@
     "es2020": true,
     "node": true
   },
+  "globals": {
+    "NodeJS": "readonly"
+  },
   "extends": [
     "eslint:recommended",
-    "@typescript-eslint/recommended",
-    "prettier"
+    "plugin:@typescript-eslint/recommended",
+    "eslint-config-prettier"
   ],
   "ignorePatterns": [
     "dist",
@@ -48,7 +51,9 @@
     "prefer-const": "error",
     "no-var": "error",
     "object-shorthand": "error",
-    "prefer-template": "error"
+    "prefer-template": "error",
+    "no-undef": "off",
+    "no-useless-catch": "off"
   },
   "overrides": [
     {

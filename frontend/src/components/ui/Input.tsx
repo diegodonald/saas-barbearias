@@ -81,10 +81,15 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           </label>
         )}
 
-        <div className="relative">
+        <div className='relative'>
           {leftIcon && (
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <span className={clsx('text-secondary-400', error && 'text-error-400')}>
+            <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none'>
+              <span
+                className={clsx(
+                  'text-secondary-400',
+                  error && 'text-error-400'
+                )}
+              >
                 {leftIcon}
               </span>
             </div>
@@ -99,10 +104,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           />
 
           {(rightIcon || isPassword) && (
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+            <div className='absolute inset-y-0 right-0 flex items-center pr-3'>
               {isPassword ? (
                 <button
-                  type="button"
+                  type='button'
                   onClick={() => setShowPassword(!showPassword)}
                   className={clsx(
                     'text-secondary-400 hover:text-secondary-600 transition-colors',
@@ -113,7 +118,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               ) : (
-                <span className={clsx('text-secondary-400', error && 'text-error-400')}>
+                <span
+                  className={clsx(
+                    'text-secondary-400',
+                    error && 'text-error-400'
+                  )}
+                >
                   {rightIcon}
                 </span>
               )}

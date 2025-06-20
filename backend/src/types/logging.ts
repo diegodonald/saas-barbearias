@@ -15,11 +15,13 @@ export interface LogContext {
   service?: string | undefined;
   operation?: string | undefined;
   metadata?: Record<string, any> | undefined;
-  performance?: {
-    duration: number;
-    memoryUsage: NodeJS.MemoryUsage;
-    cpuUsage?: NodeJS.CpuUsage;
-  } | undefined;
+  performance?:
+    | {
+        duration: number;
+        memoryUsage: NodeJS.MemoryUsage;
+        cpuUsage?: NodeJS.CpuUsage;
+      }
+    | undefined;
   // Propriedades específicas para diferentes contextos
   timeWindow?: number | undefined;
   limit?: number | undefined;
@@ -46,7 +48,12 @@ export interface LogMetrics {
 }
 
 export interface SecurityEvent {
-  type: 'LOGIN_ATTEMPT' | 'LOGIN_SUCCESS' | 'LOGIN_FAILURE' | 'UNAUTHORIZED_ACCESS' | 'SUSPICIOUS_ACTIVITY';
+  type:
+    | 'LOGIN_ATTEMPT'
+    | 'LOGIN_SUCCESS'
+    | 'LOGIN_FAILURE'
+    | 'UNAUTHORIZED_ACCESS'
+    | 'SUSPICIOUS_ACTIVITY';
   userId?: string;
   ip: string;
   userAgent: string;

@@ -33,9 +33,10 @@ export class CacheController {
             keyspace_misses: redisInfo['keyspace_misses'],
           },
         },
-        hitRate: stats.hits + stats.misses > 0 
-          ? ((stats.hits / (stats.hits + stats.misses)) * 100).toFixed(2) + '%'
-          : '0%',
+        hitRate:
+          stats.hits + stats.misses > 0
+            ? `${((stats.hits / (stats.hits + stats.misses)) * 100).toFixed(2)}%`
+            : '0%',
       };
 
       advancedLogger.info('Estatísticas do cache solicitadas', {
@@ -63,7 +64,10 @@ export class CacheController {
   /**
    * Limpar cache por padrão
    */
-  static async clearByPattern(req: Request, res: Response<ApiResponse>): Promise<Response<ApiResponse> | void> {
+  static async clearByPattern(
+    req: Request,
+    res: Response<ApiResponse>
+  ): Promise<Response<ApiResponse> | void> {
     try {
       const { pattern } = req.body;
 
@@ -103,7 +107,10 @@ export class CacheController {
   /**
    * Limpar todo o cache
    */
-  static async clearAll(req: Request, res: Response<ApiResponse>): Promise<Response<ApiResponse> | void> {
+  static async clearAll(
+    req: Request,
+    res: Response<ApiResponse>
+  ): Promise<Response<ApiResponse> | void> {
     try {
       const success = await cacheService.clear();
 
@@ -183,7 +190,10 @@ export class CacheController {
   /**
    * Definir valor no cache
    */
-  static async setValue(req: Request, res: Response<ApiResponse>): Promise<Response<ApiResponse> | void> {
+  static async setValue(
+    req: Request,
+    res: Response<ApiResponse>
+  ): Promise<Response<ApiResponse> | void> {
     try {
       const key = req.params['key'] as string;
       const { value, ttl, prefix } = req.body;

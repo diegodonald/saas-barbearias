@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  ReactNode,
+} from 'react';
 import { AuthService } from '@/services/auth.service';
 import {
   AuthContextType,
@@ -24,10 +30,16 @@ const initialState: AuthState = {
 // Tipos de ações
 type AuthAction =
   | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'LOGIN_SUCCESS'; payload: { user: User; accessToken: string; refreshToken: string } }
+  | {
+      type: 'LOGIN_SUCCESS';
+      payload: { user: User; accessToken: string; refreshToken: string };
+    }
   | { type: 'LOGOUT' }
   | { type: 'UPDATE_USER'; payload: User }
-  | { type: 'REFRESH_TOKEN_SUCCESS'; payload: { user: User; accessToken: string; refreshToken: string } };
+  | {
+      type: 'REFRESH_TOKEN_SUCCESS';
+      payload: { user: User; accessToken: string; refreshToken: string };
+    };
 
 // Reducer
 function authReducer(state: AuthState, action: AuthAction): AuthState {
@@ -146,9 +158,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = async (credentials: LoginRequest): Promise<void> => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
-      
+
       const response = await AuthService.login(credentials);
-      
+
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: {
@@ -161,14 +173,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
       toast.success('Login realizado com sucesso!');
     } catch (error) {
       console.error('Erro no login:', error);
-      
+
       if (error instanceof ApiError) {
         switch (error.code) {
           case 'INVALID_CREDENTIALS':
             toast.error('Email ou senha incorretos');
             break;
           case 'ACCOUNT_DISABLED':
-            toast.error('Sua conta foi desativada. Entre em contato com o administrador.');
+            toast.error(
+              'Sua conta foi desativada. Entre em contato com o administrador.'
+            );
             break;
           default:
             toast.error(error.message || 'Erro ao fazer login');
@@ -176,7 +190,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       } else {
         toast.error('Erro interno. Tente novamente.');
       }
-      
+
       throw error;
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
@@ -187,9 +201,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const register = async (data: RegisterRequest): Promise<void> => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
-      
+
       const response = await AuthService.register(data);
-      
+
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: {
@@ -202,7 +216,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       toast.success('Conta criada com sucesso!');
     } catch (error) {
       console.error('Erro no registro:', error);
-      
+
       if (error instanceof ApiError) {
         switch (error.code) {
           case 'EMAIL_ALREADY_EXISTS':
@@ -217,7 +231,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       } else {
         toast.error('Erro interno. Tente novamente.');
       }
-      
+
       throw error;
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
@@ -244,13 +258,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
       toast.success('Perfil atualizado com sucesso!');
     } catch (error) {
       console.error('Erro ao atualizar perfil:', error);
-      
+
       if (error instanceof ApiError) {
         toast.error(error.message || 'Erro ao atualizar perfil');
       } else {
         toast.error('Erro interno. Tente novamente.');
       }
-      
+
       throw error;
     }
   };
@@ -262,7 +276,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       toast.success('Senha alterada com sucesso!');
     } catch (error) {
       console.error('Erro ao alterar senha:', error);
-      
+
       if (error instanceof ApiError) {
         switch (error.code) {
           case 'INCORRECT_CURRENT_PASSWORD':
@@ -277,7 +291,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       } else {
         toast.error('Erro interno. Tente novamente.');
       }
-      
+
       throw error;
     }
   };

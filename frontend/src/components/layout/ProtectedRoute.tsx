@@ -20,7 +20,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // Mostrar loading enquanto verifica autenticação
   if (isLoading) {
-    return <PageLoading text="Verificando autenticação..." />;
+    return <PageLoading text='Verificando autenticação...' />;
   }
 
   // Redirecionar para login se não estiver autenticado
@@ -31,7 +31,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Verificar se o usuário tem uma das roles necessárias
   if (requiredRoles.length > 0 && !requiredRoles.includes(user.role)) {
     // Redirecionar para página de acesso negado ou dashboard
-    return <Navigate to="/unauthorized" replace />;
+    return <Navigate to='/unauthorized' replace />;
   }
 
   return <>{children}</>;

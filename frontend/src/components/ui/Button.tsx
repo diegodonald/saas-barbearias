@@ -88,15 +88,15 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {isLoading ? (
-          <Loader2 size={iconSize} className="animate-spin" />
+          <Loader2 size={iconSize} className='animate-spin' />
         ) : (
-          leftIcon && <span className="flex-shrink-0">{leftIcon}</span>
+          leftIcon && <span className='flex-shrink-0'>{leftIcon}</span>
         )}
-        
+
         {children && <span>{children}</span>}
-        
+
         {!isLoading && rightIcon && (
-          <span className="flex-shrink-0">{rightIcon}</span>
+          <span className='flex-shrink-0'>{rightIcon}</span>
         )}
       </button>
     );

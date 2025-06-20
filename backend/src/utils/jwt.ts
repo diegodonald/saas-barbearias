@@ -6,7 +6,7 @@ import { logger } from '@/config/logger';
 // Classe para gerenciar JWT tokens
 export class JWTManager {
   private static accessTokenSecret = config.jwt.secret;
-  private static refreshTokenSecret = config.jwt.secret + '_refresh';
+  private static refreshTokenSecret = `${config.jwt.secret}_refresh`;
   private static accessTokenExpiry = config.jwt.expiresIn;
   private static refreshTokenExpiry = config.jwt.refreshExpiresIn;
 

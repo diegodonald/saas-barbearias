@@ -78,20 +78,17 @@ class BarbershopService {
    */
   async list(filters: BarbershopFilters = {}): Promise<BarbershopListResponse> {
     const params = new URLSearchParams();
-    
+
     if (filters.search) params.append('search', filters.search);
     if (filters.ownerId) params.append('ownerId', filters.ownerId);
     if (filters.page) params.append('page', filters.page.toString());
     if (filters.limit) params.append('limit', filters.limit.toString());
 
-    const response = await api.get<ApiResponse<Barbershop[]> & { pagination: any }>(
+    const response = await api.get<BarbershopListResponse>(
       `/barbershops?${params.toString()}`
     );
 
-    return {
-      data: response.data.data,
-      pagination: response.data.pagination,
-    };
+    return response;
   }
 
   /**
@@ -99,24 +96,24 @@ class BarbershopService {
    */
   async getById(id: string, includeDetails = false): Promise<Barbershop> {
     const params = includeDetails ? '?includeDetails=true' : '';
-    const response = await api.get<ApiResponse<Barbershop>>(`/barbershops/${id}${params}`);
-    return response.data.data;
+    const response = await api.get<Barbershop>(`/barbershops/${id}${params}`);
+    return response;
   }
 
   /**
    * Criar nova barbearia
    */
   async create(data: CreateBarbershopData): Promise<Barbershop> {
-    const response = await api.post<ApiResponse<Barbershop>>('/barbershops', data);
-    return response.data.data;
+    const response = await api.post<Barbershop>('/barbershops', data);
+    return response;
   }
 
   /**
    * Atualizar barbearia
    */
   async update(id: string, data: UpdateBarbershopData): Promise<Barbershop> {
-    const response = await api.put<ApiResponse<Barbershop>>(`/barbershops/${id}`, data);
-    return response.data.data;
+    const response = await api.put<Barbershop>(`/barbershops/${id}`, data);
+    return response;
   }
 
   /**
@@ -129,7 +126,9 @@ class BarbershopService {
   /**
    * Validar dados de barbearia
    */
-  validateBarbershopData(data: CreateBarbershopData | UpdateBarbershopData): string[] {
+  validateBarbershopData(
+    data: CreateBarbershopData | UpdateBarbershopData
+  ): string[] {
     const errors: string[] = [];
 
     if ('name' in data && data.name !== undefined) {
@@ -169,7 +168,11 @@ class BarbershopService {
       }
     }
 
-    if ('description' in data && data.description !== undefined && data.description) {
+    if (
+      'description' in data &&
+      data.description !== undefined &&
+      data.description
+    ) {
       if (data.description.length > 500) {
         errors.push('Descrição deve ter no máximo 500 caracteres');
       }
@@ -183,13 +186,13 @@ class BarbershopService {
    */
   formatPhone(phone: string): string {
     const cleaned = phone.replace(/\D/g, '');
-    
+
     if (cleaned.length === 10) {
       return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 6)}-${cleaned.slice(6)}`;
     } else if (cleaned.length === 11) {
       return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 7)}-${cleaned.slice(7)}`;
     }
-    
+
     return phone;
   }
 
@@ -217,18 +220,26 @@ class BarbershopService {
   /**
    * Verificar se usuário pode editar barbearia
    */
-  canEditBarbershop(barbershop: Barbershop, userId?: string, userRole?: string): boolean {
+  canEditBarbershop(
+    barbershop: Barbershop,
+    userId?: string,
+    userRole?: string
+  ): boolean {
     if (!userId) return false;
-    
+
     return userRole === 'SUPER_ADMIN' || barbershop.ownerId === userId;
   }
 
   /**
    * Verificar se usuário pode deletar barbearia
    */
-  canDeleteBarbershop(barbershop: Barbershop, userId?: string, userRole?: string): boolean {
+  canDeleteBarbershop(
+    barbershop: Barbershop,
+    userId?: string,
+    userRole?: string
+  ): boolean {
     if (!userId) return false;
-    
+
     return userRole === 'SUPER_ADMIN' || barbershop.ownerId === userId;
   }
 
@@ -276,18 +287,30 @@ class BarbershopService {
    */
   validateWorkingHours(hours: any): string[] {
     const errors: string[] = [];
-    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-    
+    const days = [
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
+      'sunday',
+    ];
+
     days.forEach(day => {
       if (hours[day] && !hours[day].closed) {
         if (!hours[day].open || !hours[day].close) {
-          errors.push(`Horário de ${day} deve ter abertura e fechamento definidos`);
+          errors.push(
+            `Horário de ${day} deve ter abertura e fechamento definidos`
+          );
         } else if (hours[day].open >= hours[day].close) {
-          errors.push(`Horário de abertura deve ser anterior ao fechamento em ${day}`);
+          errors.push(
+            `Horário de abertura deve ser anterior ao fechamento em ${day}`
+          );
         }
       }
     });
-    
+
     return errors;
   }
 }

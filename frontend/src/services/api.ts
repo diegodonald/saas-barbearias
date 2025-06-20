@@ -12,14 +12,14 @@ const apiClient: AxiosInstance = axios.create(API_CONFIG);
 
 // Interceptor para adicionar token de autorização
 apiClient.interceptors.request.use(
-  (config) => {
+  config => {
     const token = localStorage.getItem('accessToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
   }
 );
@@ -29,7 +29,7 @@ apiClient.interceptors.response.use(
   (response: AxiosResponse<ApiResponse>) => {
     return response;
   },
-  async (error) => {
+  async error => {
     const originalRequest = error.config;
 
     // Se o token expirou, tentar renovar
@@ -39,12 +39,16 @@ apiClient.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem('refreshToken');
         if (refreshToken) {
-          const response = await axios.post(`${API_CONFIG.baseURL}/auth/refresh`, {
-            refreshToken,
-          });
+          const response = await axios.post(
+            `${API_CONFIG.baseURL}/auth/refresh`,
+            {
+              refreshToken,
+            }
+          );
 
-          const { accessToken, refreshToken: newRefreshToken } = response.data.data;
-          
+          const { accessToken, refreshToken: newRefreshToken } =
+            response.data.data;
+
           localStorage.setItem('accessToken', accessToken);
           localStorage.setItem('refreshToken', newRefreshToken);
 
@@ -87,7 +91,11 @@ export class ApiService {
   /**
    * POST request
    */
-  static async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  static async post<T>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
     const response = await apiClient.post<ApiResponse<T>>(url, data, config);
     return response.data.data as T;
   }
@@ -95,7 +103,11 @@ export class ApiService {
   /**
    * PUT request
    */
-  static async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  static async put<T>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
     const response = await apiClient.put<ApiResponse<T>>(url, data, config);
     return response.data.data as T;
   }
@@ -103,7 +115,11 @@ export class ApiService {
   /**
    * PATCH request
    */
-  static async patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  static async patch<T>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
     const response = await apiClient.patch<ApiResponse<T>>(url, data, config);
     return response.data.data as T;
   }
@@ -119,7 +135,11 @@ export class ApiService {
   /**
    * Upload de arquivo
    */
-  static async upload<T>(url: string, file: File, onProgress?: (progress: number) => void): Promise<T> {
+  static async upload<T>(
+    url: string,
+    file: File,
+    onProgress?: (progress: number) => void
+  ): Promise<T> {
     const formData = new FormData();
     formData.append('file', file);
 
@@ -127,15 +147,21 @@ export class ApiService {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      onUploadProgress: (progressEvent) => {
+      onUploadProgress: progressEvent => {
         if (onProgress && progressEvent.total) {
-          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          const progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
           onProgress(progress);
         }
       },
     };
 
-    const response = await apiClient.post<ApiResponse<T>>(url, formData, config);
+    const response = await apiClient.post<ApiResponse<T>>(
+      url,
+      formData,
+      config
+    );
     return response.data.data as T;
   }
 
@@ -162,9 +188,14 @@ export class ApiService {
    * Health check
    */
   static async healthCheck(): Promise<any> {
-    const response = await axios.get(`${API_CONFIG.baseURL.replace('/api', '')}/health`);
+    const response = await axios.get(
+      `${API_CONFIG.baseURL.replace('/api', '')}/health`
+    );
     return response.data;
   }
 }
 
 export default ApiService;
+
+// Exportação nomeada para compatibilidade
+export const api = ApiService;

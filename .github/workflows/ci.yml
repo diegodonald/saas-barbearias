@@ -25,21 +25,40 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install backend dependencies
         working-directory: ./backend
         run: npm ci
 
-      - name: Run ESLint
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run backend ESLint
         working-directory: ./backend
         run: npm run lint
 
-      - name: Run TypeScript type check
+      - name: Run frontend ESLint
+        working-directory: ./frontend
+        run: npm run lint
+
+      - name: Run backend TypeScript type check
         working-directory: ./backend
         run: npm run type-check
 
-      - name: Check Prettier formatting
+      - name: Run frontend TypeScript type check
+        working-directory: ./frontend
+        run: npm run type-check
+
+      - name: Check backend Prettier formatting
         working-directory: ./backend
         run: npx prettier --check "src/**/*.{js,ts,json}"
+
+      - name: Check frontend Prettier formatting
+        working-directory: ./frontend
+        run: npx prettier --check "src/**/*.{ts,tsx}"
 
   # Job de Testes Unitários
   unit-tests:
@@ -81,8 +100,15 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install backend dependencies
         working-directory: ./backend
+        run: npm ci
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
         run: npm ci
 
       - name: Setup test database
@@ -132,16 +158,31 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install backend dependencies
         working-directory: ./backend
         run: npm ci
 
-      - name: Run security audit
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run backend security audit
         working-directory: ./backend
         run: npm audit --audit-level=moderate
 
-      - name: Check for vulnerabilities
+      - name: Run frontend security audit
+        working-directory: ./frontend
+        run: npm audit --audit-level=moderate
+
+      - name: Check backend vulnerabilities
         working-directory: ./backend
+        run: npm audit --audit-level=high
+
+      - name: Check frontend vulnerabilities
+        working-directory: ./frontend
         run: npm audit --audit-level=high
 
   # Job de Build
@@ -159,19 +200,37 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install backend dependencies
         working-directory: ./backend
+        run: npm ci
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
         run: npm ci
 
       - name: Build backend
         working-directory: ./backend
         run: npm run build
 
-      - name: Upload build artifacts
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Upload backend build artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: build-artifacts
+          name: backend-build-artifacts
           path: backend/dist/
+          retention-days: 7
+
+      - name: Upload frontend build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build-artifacts
+          path: frontend/dist/
           retention-days: 7
 
   # Job de Deploy (apenas na branch main)

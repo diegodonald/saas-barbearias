@@ -16,7 +16,7 @@ class MetricsCollector {
    */
   collectPerformance(metrics: PerformanceMetrics): void {
     this.performanceMetrics.push(metrics);
-    
+
     // Manter apenas os últimos N registros
     if (this.performanceMetrics.length > this.maxMetricsSize) {
       this.performanceMetrics = this.performanceMetrics.slice(-this.maxMetricsSize);
@@ -29,7 +29,7 @@ class MetricsCollector {
   collectError(error: Omit<ErrorMetrics, 'count' | 'firstOccurrence' | 'lastOccurrence'>): void {
     const key = `${error.type}:${error.message}`;
     const existing = this.errorMetrics.get(key);
-    
+
     if (existing) {
       existing.count++;
       existing.lastOccurrence = new Date();
@@ -50,7 +50,7 @@ class MetricsCollector {
     this.securityEvents.push({
       ...event,
     });
-    
+
     // Manter apenas os últimos eventos
     if (this.securityEvents.length > this.maxMetricsSize) {
       this.securityEvents = this.securityEvents.slice(-this.maxMetricsSize);
@@ -62,7 +62,7 @@ class MetricsCollector {
    */
   recordBusinessEvent(event: BusinessEvent): void {
     this.businessEvents.push(event);
-    
+
     // Manter apenas os últimos eventos
     if (this.businessEvents.length > this.maxMetricsSize) {
       this.businessEvents = this.businessEvents.slice(-this.maxMetricsSize);
@@ -79,8 +79,8 @@ class MetricsCollector {
     slowestEndpoints: Array<{ endpoint: string; avgDuration: number }>;
   } {
     const cutoff = new Date(Date.now() - timeWindow);
-    const recentMetrics = this.performanceMetrics.filter(m => m.timestamp >= cutoff);
-    
+    const recentMetrics = this.performanceMetrics.filter((m) => m.timestamp >= cutoff);
+
     if (recentMetrics.length === 0) {
       return {
         averageResponseTime: 0,
@@ -91,11 +91,11 @@ class MetricsCollector {
     }
 
     const totalDuration = recentMetrics.reduce((sum, m) => sum + m.duration, 0);
-    const errorCount = recentMetrics.filter(m => m.statusCode >= 400).length;
-    
+    const errorCount = recentMetrics.filter((m) => m.statusCode >= 400).length;
+
     // Agrupar por endpoint
     const endpointStats = new Map<string, { totalDuration: number; count: number }>();
-    recentMetrics.forEach(m => {
+    recentMetrics.forEach((m) => {
       const key = `${m.method} ${m.endpoint}`;
       const existing = endpointStats.get(key) || { totalDuration: 0, count: 0 };
       existing.totalDuration += m.duration;
@@ -133,8 +133,8 @@ class MetricsCollector {
    */
   getRecentSecurityEvents(timeWindow: number = 3600000): SecurityEvent[] {
     const cutoff = new Date(Date.now() - timeWindow);
-    return this.securityEvents.filter(event => 
-      new Date(event.details['timestamp'] || Date.now()) >= cutoff
+    return this.securityEvents.filter(
+      (event) => new Date(event.details['timestamp'] || Date.now()) >= cutoff
     );
   }
 
@@ -143,8 +143,8 @@ class MetricsCollector {
    */
   getRecentBusinessEvents(timeWindow: number = 3600000): BusinessEvent[] {
     const cutoff = new Date(Date.now() - timeWindow);
-    return this.businessEvents.filter(event => 
-      new Date(event.metadata?.['timestamp'] ?? Date.now()) >= cutoff
+    return this.businessEvents.filter(
+      (event) => new Date(event.metadata?.['timestamp'] ?? Date.now()) >= cutoff
     );
   }
 
@@ -154,12 +154,12 @@ class MetricsCollector {
   getSystemSummary() {
     const memoryUsage = process.memoryUsage();
     const uptime = process.uptime();
-    
+
     return {
       performance: this.getPerformanceStats(),
       topErrors: this.getTopErrors(5),
-      securityAlerts: this.getRecentSecurityEvents().filter(e => 
-        e.severity === 'HIGH' || e.severity === 'CRITICAL'
+      securityAlerts: this.getRecentSecurityEvents().filter(
+        (e) => e.severity === 'HIGH' || e.severity === 'CRITICAL'
       ).length,
       businessActivity: this.getRecentBusinessEvents().length,
       memoryUsage,
@@ -172,18 +172,18 @@ class MetricsCollector {
    */
   cleanup(): void {
     const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 horas
-    
+
     // Limpar métricas de performance
-    this.performanceMetrics = this.performanceMetrics.filter(m => m.timestamp >= cutoff);
-    
+    this.performanceMetrics = this.performanceMetrics.filter((m) => m.timestamp >= cutoff);
+
     // Limpar eventos de segurança
-    this.securityEvents = this.securityEvents.filter(e => 
-      new Date(e.details['timestamp'] ?? Date.now()) >= cutoff
+    this.securityEvents = this.securityEvents.filter(
+      (e) => new Date(e.details['timestamp'] ?? Date.now()) >= cutoff
     );
-    
+
     // Limpar eventos de negócio
-    this.businessEvents = this.businessEvents.filter(e => 
-      new Date(e.metadata?.['timestamp'] ?? Date.now()) >= cutoff
+    this.businessEvents = this.businessEvents.filter(
+      (e) => new Date(e.metadata?.['timestamp'] ?? Date.now()) >= cutoff
     );
   }
 }
@@ -192,8 +192,11 @@ class MetricsCollector {
 export const metricsCollector = new MetricsCollector();
 
 // Configurar limpeza automática a cada hora
-setInterval(() => {
-  metricsCollector.cleanup();
-}, 60 * 60 * 1000);
+setInterval(
+  () => {
+    metricsCollector.cleanup();
+  },
+  60 * 60 * 1000
+);
 
 export default metricsCollector;

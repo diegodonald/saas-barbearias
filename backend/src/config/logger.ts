@@ -186,11 +186,13 @@ class AdvancedLogger {
   error(message: string, error?: Error, context: LogContext = {}): void {
     const errorContext = {
       ...context,
-      error: error ? {
-        name: error.name,
-        message: error.message,
-        stack: error.stack,
-      } : undefined,
+      error: error
+        ? {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          }
+        : undefined,
     };
 
     this.logWithContext('error', message, errorContext);
@@ -259,16 +261,20 @@ class AdvancedLogger {
    * Log de evento de negócio
    */
   business(event: BusinessEvent): void {
-    this.logWithContext('info', `Business Event: ${event.type} ${event.action} on ${event.entity}`, {
-      userId: event.userId ?? undefined,
-      metadata: {
-        entity: event.entity,
-        entityId: event.entityId,
-        action: event.action,
-        changes: event.changes,
-        ...event.metadata,
-      },
-    });
+    this.logWithContext(
+      'info',
+      `Business Event: ${event.type} ${event.action} on ${event.entity}`,
+      {
+        userId: event.userId ?? undefined,
+        metadata: {
+          entity: event.entity,
+          entityId: event.entityId,
+          action: event.action,
+          changes: event.changes,
+          ...event.metadata,
+        },
+      }
+    );
 
     metricsCollector.recordBusinessEvent(event);
   }

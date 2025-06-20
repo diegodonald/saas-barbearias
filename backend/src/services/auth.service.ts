@@ -259,7 +259,9 @@ export class AuthService {
 
       if (!user) {
         // Por segurança, não revelar se o email existe
-        advancedLogger.warn('Tentativa de reset para email inexistente', { metadata: { email: data.email } });
+        advancedLogger.warn('Tentativa de reset para email inexistente', {
+          metadata: { email: data.email },
+        });
         return;
       }
 
@@ -272,7 +274,7 @@ export class AuthService {
       // Por enquanto, apenas log
       advancedLogger.info('Token de reset gerado', {
         userId: user.id,
-        metadata: { email: user.email, expiresAt, hashedToken }
+        metadata: { email: user.email, expiresAt, hashedToken },
       });
 
       // TODO: Enviar email com token de reset
@@ -301,7 +303,7 @@ export class AuthService {
 
       // TODO: Atualizar senha do usuário baseado no token
       advancedLogger.info('Reset de senha realizado', {
-        metadata: { token: data.token, hashedPassword }
+        metadata: { token: data.token, hashedPassword },
       });
     } catch (error) {
       advancedLogger.error('Erro no reset de senha', error as Error);

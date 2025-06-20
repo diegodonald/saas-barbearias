@@ -15,13 +15,16 @@ export class AuthService {
    * Login do usuário
    */
   static async login(credentials: LoginRequest): Promise<AuthResponse> {
-    const response = await ApiService.post<AuthResponse>('/auth/login', credentials);
-    
+    const response = await ApiService.post<AuthResponse>(
+      '/auth/login',
+      credentials
+    );
+
     // Salvar tokens no localStorage
     localStorage.setItem('accessToken', response.accessToken);
     localStorage.setItem('refreshToken', response.refreshToken);
     localStorage.setItem('user', JSON.stringify(response.user));
-    
+
     return response;
   }
 
@@ -29,13 +32,16 @@ export class AuthService {
    * Registro de novo usuário
    */
   static async register(data: RegisterRequest): Promise<AuthResponse> {
-    const response = await ApiService.post<AuthResponse>('/auth/register', data);
-    
+    const response = await ApiService.post<AuthResponse>(
+      '/auth/register',
+      data
+    );
+
     // Salvar tokens no localStorage
     localStorage.setItem('accessToken', response.accessToken);
     localStorage.setItem('refreshToken', response.refreshToken);
     localStorage.setItem('user', JSON.stringify(response.user));
-    
+
     return response;
   }
 
@@ -61,7 +67,7 @@ export class AuthService {
    */
   static async refreshToken(): Promise<AuthResponse> {
     const refreshToken = localStorage.getItem('refreshToken');
-    
+
     if (!refreshToken) {
       throw new Error('Refresh token não encontrado');
     }
@@ -69,12 +75,12 @@ export class AuthService {
     const response = await ApiService.post<AuthResponse>('/auth/refresh', {
       refreshToken,
     });
-    
+
     // Atualizar tokens no localStorage
     localStorage.setItem('accessToken', response.accessToken);
     localStorage.setItem('refreshToken', response.refreshToken);
     localStorage.setItem('user', JSON.stringify(response.user));
-    
+
     return response;
   }
 
@@ -90,10 +96,10 @@ export class AuthService {
    */
   static async updateProfile(data: UpdateProfileRequest): Promise<User> {
     const response = await ApiService.put<User>('/auth/profile', data);
-    
+
     // Atualizar dados do usuário no localStorage
     localStorage.setItem('user', JSON.stringify(response));
-    
+
     return response;
   }
 
@@ -161,7 +167,7 @@ export class AuthService {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const now = Math.floor(Date.now() / 1000);
       const timeUntilExpiry = payload.exp - now;
-      
+
       // Renovar se faltam menos de 15 minutos
       return timeUntilExpiry <= 15 * 60;
     } catch (error) {
@@ -183,8 +189,10 @@ export class AuthService {
       CLIENT: 1,
     };
 
-    const userLevel = roleHierarchy[user.role as keyof typeof roleHierarchy] || 0;
-    const requiredLevel = roleHierarchy[requiredRole as keyof typeof roleHierarchy] || 0;
+    const userLevel =
+      roleHierarchy[user.role as keyof typeof roleHierarchy] || 0;
+    const requiredLevel =
+      roleHierarchy[requiredRole as keyof typeof roleHierarchy] || 0;
 
     return userLevel >= requiredLevel;
   }
@@ -202,16 +210,22 @@ export class AuthService {
     // Lógica específica por role
     switch (user.role) {
       case 'ADMIN':
-        return ['barbershop', 'barbers', 'services', 'appointments'].includes(resource);
-      
+        return ['barbershop', 'barbers', 'services', 'appointments'].includes(
+          resource
+        );
+
       case 'BARBER':
-        return ['own_schedule', 'own_profile', 'appointments'].includes(resource) &&
-               ['view', 'update'].includes(action);
-      
+        return (
+          ['own_schedule', 'own_profile', 'appointments'].includes(resource) &&
+          ['view', 'update'].includes(action)
+        );
+
       case 'CLIENT':
-        return ['own_profile', 'appointments'].includes(resource) &&
-               ['view', 'create', 'update'].includes(action);
-      
+        return (
+          ['own_profile', 'appointments'].includes(resource) &&
+          ['view', 'create', 'update'].includes(action)
+        );
+
       default:
         return false;
     }

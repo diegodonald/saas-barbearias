@@ -19,10 +19,18 @@ export interface CardFooterProps extends HTMLAttributes<HTMLDivElement> {}
 
 // Card principal
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant = 'default', padding = 'md', hover = false, children, ...props }, ref) => {
-    const baseClasses = [
-      'rounded-xl transition-all duration-200',
-    ];
+  (
+    {
+      className,
+      variant = 'default',
+      padding = 'md',
+      hover = false,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const baseClasses = ['rounded-xl transition-all duration-200'];
 
     const variantClasses = {
       default: 'bg-white',
@@ -37,7 +45,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       lg: 'p-8',
     };
 
-    const hoverClasses = hover ? 'hover:shadow-medium hover:-translate-y-0.5 cursor-pointer' : '';
+    const hoverClasses = hover
+      ? 'hover:shadow-medium hover:-translate-y-0.5 cursor-pointer'
+      : '';
 
     const classes = clsx(
       baseClasses,
@@ -64,24 +74,20 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
 
     return (
       <div ref={ref} className={classes} {...props}>
-        <div className="flex-1 min-w-0">
+        <div className='flex-1 min-w-0'>
           {title && (
-            <h3 className="text-lg font-semibold text-secondary-900 truncate">
+            <h3 className='text-lg font-semibold text-secondary-900 truncate'>
               {title}
             </h3>
           )}
           {subtitle && (
-            <p className="mt-1 text-sm text-secondary-500 truncate">
+            <p className='mt-1 text-sm text-secondary-500 truncate'>
               {subtitle}
             </p>
           )}
           {children}
         </div>
-        {action && (
-          <div className="flex-shrink-0 ml-4">
-            {action}
-          </div>
-        )}
+        {action && <div className='flex-shrink-0 ml-4'>{action}</div>}
       </div>
     );
   }

@@ -32,12 +32,14 @@ const Loading: React.FC<LoadingProps> = ({
   };
 
   const renderSpinner = () => (
-    <Loader2 className={clsx('animate-spin text-primary-600', sizeClasses[size])} />
+    <Loader2
+      className={clsx('animate-spin text-primary-600', sizeClasses[size])}
+    />
   );
 
   const renderDots = () => (
-    <div className="flex space-x-1">
-      {[0, 1, 2].map((i) => (
+    <div className='flex space-x-1'>
+      {[0, 1, 2].map(i => (
         <div
           key={i}
           className={clsx(
@@ -77,10 +79,20 @@ const Loading: React.FC<LoadingProps> = ({
   };
 
   const content = (
-    <div className={clsx('flex flex-col items-center justify-center gap-3', className)}>
+    <div
+      className={clsx(
+        'flex flex-col items-center justify-center gap-3',
+        className
+      )}
+    >
       {renderVariant()}
       {text && (
-        <p className={clsx('text-secondary-600 font-medium', textSizeClasses[size])}>
+        <p
+          className={clsx(
+            'text-secondary-600 font-medium',
+            textSizeClasses[size]
+          )}
+        >
           {text}
         </p>
       )}
@@ -89,7 +101,7 @@ const Loading: React.FC<LoadingProps> = ({
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 bg-white bg-opacity-80 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className='fixed inset-0 bg-white bg-opacity-80 backdrop-blur-sm z-50 flex items-center justify-center'>
         {content}
       </div>
     );
@@ -99,30 +111,32 @@ const Loading: React.FC<LoadingProps> = ({
 };
 
 // Componente de Loading para páginas
-export const PageLoading: React.FC<{ text?: string }> = ({ text = 'Carregando...' }) => (
-  <div className="min-h-screen flex items-center justify-center">
-    <Loading size="lg" text={text} />
+export const PageLoading: React.FC<{ text?: string }> = ({
+  text = 'Carregando...',
+}) => (
+  <div className='min-h-screen flex items-center justify-center'>
+    <Loading size='lg' text={text} />
   </div>
 );
 
 // Componente de Loading para seções
-export const SectionLoading: React.FC<{ text?: string; className?: string }> = ({ 
-  text = 'Carregando...', 
-  className 
-}) => (
+export const SectionLoading: React.FC<{
+  text?: string;
+  className?: string;
+}> = ({ text = 'Carregando...', className }) => (
   <div className={clsx('py-12 flex items-center justify-center', className)}>
-    <Loading size="md" text={text} />
+    <Loading size='md' text={text} />
   </div>
 );
 
 // Componente de Loading inline
-export const InlineLoading: React.FC<{ text?: string; className?: string }> = ({ 
-  text, 
-  className 
+export const InlineLoading: React.FC<{ text?: string; className?: string }> = ({
+  text,
+  className,
 }) => (
   <div className={clsx('flex items-center gap-2', className)}>
-    <Loading size="sm" />
-    {text && <span className="text-sm text-secondary-600">{text}</span>}
+    <Loading size='sm' />
+    {text && <span className='text-sm text-secondary-600'>{text}</span>}
   </div>
 );
 

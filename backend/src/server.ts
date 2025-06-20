@@ -211,9 +211,11 @@ async function startServer() {
     // Conectar ao banco de dados
     await connectDatabase();
 
-    // Conectar ao Redis
+    // Conectar ao Redis (opcional)
     try {
       await connectRedis();
+      // Aguardar um pouco para verificar se a conexão está estável
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const redisHealth = await checkRedisHealth();
       if (redisHealth.status === 'healthy') {
         logger.info('✅ Conectado ao Redis');
@@ -221,7 +223,7 @@ async function startServer() {
         logger.warn('⚠️ Redis não disponível - cache desabilitado');
       }
     } catch (error) {
-      logger.warn('⚠️ Redis não disponível - continuando sem cache');
+      logger.warn('⚠️ Redis não disponível - continuando sem cache', error);
     }
 
     // Iniciar servidor

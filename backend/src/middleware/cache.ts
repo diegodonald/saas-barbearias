@@ -49,12 +49,12 @@ export function cacheMiddleware(options: CacheMiddlewareOptions = {}) {
 
       if (cached) {
         const { statusCode, headers, body } = cached as any;
-        
+
         // Definir headers do cache
         res.set(headers);
         res.set('X-Cache', 'HIT');
         res.set('X-Cache-Key', cacheKey);
-        
+
         advancedLogger.debug('Cache hit para rota HTTP', {
           method: req.method,
           url: req.originalUrl,
@@ -70,13 +70,13 @@ export function cacheMiddleware(options: CacheMiddlewareOptions = {}) {
       let statusCode = 200;
 
       // Interceptar status
-      res.status = function(code: number) {
+      res.status = function (code: number) {
         statusCode = code;
         return originalStatus.call(this, code);
       };
 
       // Interceptar resposta
-      res.json = function(body: any) {
+      res.json = function (body: any) {
         // Apenas cachear respostas de sucesso
         if (statusCode >= 200 && statusCode < 300) {
           const responseData = {
@@ -86,16 +86,18 @@ export function cacheMiddleware(options: CacheMiddlewareOptions = {}) {
           };
 
           // Armazenar no cache de forma assíncrona
-          cacheService.set(cacheKey, responseData, {
-            prefix: options.prefix ?? CACHE_PREFIXES.API,
-            ttl: options.ttl ?? CACHE_TTL.SHORT,
-          }).catch(error => {
-            advancedLogger.error('Erro ao armazenar resposta no cache', error, {
-              method: req.method,
-              url: req.originalUrl,
-              metadata: { cacheKey },
+          cacheService
+            .set(cacheKey, responseData, {
+              prefix: options.prefix ?? CACHE_PREFIXES.API,
+              ttl: options.ttl ?? CACHE_TTL.SHORT,
+            })
+            .catch((error) => {
+              advancedLogger.error('Erro ao armazenar resposta no cache', error, {
+                method: req.method,
+                url: req.originalUrl,
+                metadata: { cacheKey },
+              });
             });
-          });
 
           advancedLogger.debug('Resposta armazenada no cache', {
             method: req.method,
@@ -125,16 +127,18 @@ export function cacheMiddleware(options: CacheMiddlewareOptions = {}) {
 /**
  * Middleware para invalidação de cache
  */
-export function cacheInvalidationMiddleware(options: {
-  pattern?: string;
-  keys?: string[];
-  prefix?: string;
-} = {}) {
+export function cacheInvalidationMiddleware(
+  options: {
+    pattern?: string;
+    keys?: string[];
+    prefix?: string;
+  } = {}
+) {
   return async (req: Request, res: Response, next: NextFunction) => {
     // Executar próximo middleware primeiro
     const originalSend = res.json;
-    
-    res.json = function(body: any) {
+
+    res.json = function (body: any) {
       // Apenas invalidar em caso de sucesso
       if (res.statusCode >= 200 && res.statusCode < 300) {
         // Invalidar cache de forma assíncrona
@@ -180,12 +184,12 @@ export function cacheInvalidationMiddleware(options: {
  */
 function generateHttpCacheKey(req: Request, varyBy: string[] = []): string {
   const baseKey = `${req.method}:${req.originalUrl}`;
-  
+
   if (varyBy.length === 0) {
     return baseKey;
   }
 
-  const varyParts = varyBy.map(header => {
+  const varyParts = varyBy.map((header) => {
     const value = req.get(header) || req.query[header] || '';
     return `${header}:${value}`;
   });
@@ -197,17 +201,11 @@ function generateHttpCacheKey(req: Request, varyBy: string[] = []): string {
  * Obter headers relevantes da resposta
  */
 function getResponseHeaders(res: Response): Record<string, string> {
-  const relevantHeaders = [
-    'content-type',
-    'cache-control',
-    'etag',
-    'last-modified',
-    'expires',
-  ];
+  const relevantHeaders = ['content-type', 'cache-control', 'etag', 'last-modified', 'expires'];
 
   const headers: Record<string, string> = {};
-  
-  relevantHeaders.forEach(header => {
+
+  relevantHeaders.forEach((header) => {
     const value = res.get(header);
     if (value) {
       headers[header] = value;
@@ -223,18 +221,18 @@ function getResponseHeaders(res: Response): Record<string, string> {
 export function conditionalCacheMiddleware() {
   return (req: Request, res: Response, next: NextFunction) => {
     const ifNoneMatch = req.get('If-None-Match');
-    
+
     if (ifNoneMatch) {
       // Interceptar resposta para verificar ETag
       const originalSend = res.json;
-      
-      res.json = function(body: any) {
+
+      res.json = function (body: any) {
         const etag = res.get('ETag');
-        
+
         if (etag && ifNoneMatch === etag) {
           return res.status(304).end();
         }
-        
+
         return originalSend.call(this, body);
       };
     }
@@ -246,12 +244,14 @@ export function conditionalCacheMiddleware() {
 /**
  * Middleware para definir headers de cache
  */
-export function cacheHeadersMiddleware(options: {
-  maxAge?: number;
-  mustRevalidate?: boolean;
-  noCache?: boolean;
-  noStore?: boolean;
-} = {}) {
+export function cacheHeadersMiddleware(
+  options: {
+    maxAge?: number;
+    mustRevalidate?: boolean;
+    noCache?: boolean;
+    noStore?: boolean;
+  } = {}
+) {
   return (_req: Request, res: Response, next: NextFunction) => {
     const cacheControl = [];
 
@@ -263,7 +263,7 @@ export function cacheHeadersMiddleware(options: {
       if (options.maxAge !== undefined) {
         cacheControl.push(`max-age=${options.maxAge}`);
       }
-      
+
       if (options.mustRevalidate) {
         cacheControl.push('must-revalidate');
       }

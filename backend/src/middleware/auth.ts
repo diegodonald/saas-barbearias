@@ -8,6 +8,7 @@ import { ApiResponse } from '@/types/api';
 
 // Estender interface do Request para incluir user
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       user?: AuthenticatedUser;

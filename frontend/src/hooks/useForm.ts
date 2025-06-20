@@ -1,4 +1,9 @@
-import { useForm as useReactHookForm, UseFormProps, FieldValues, Path } from 'react-hook-form';
+import {
+  useForm as useReactHookForm,
+  UseFormProps,
+  FieldValues,
+  Path,
+} from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
@@ -9,64 +14,86 @@ export const authSchemas = {
     password: z.string().min(1, 'Senha é obrigatória'),
   }),
 
-  register: z.object({
-    name: z
-      .string()
-      .min(2, 'Nome deve ter pelo menos 2 caracteres')
-      .max(100, 'Nome deve ter no máximo 100 caracteres')
-      .regex(/^[a-zA-ZÀ-ÿ\s]+$/, 'Nome deve conter apenas letras e espaços'),
-    email: z.string().email('Email inválido').min(1, 'Email é obrigatório'),
-    password: z
-      .string()
-      .min(8, 'Senha deve ter pelo menos 8 caracteres')
-      .regex(/[a-z]/, 'Senha deve conter pelo menos uma letra minúscula')
-      .regex(/[A-Z]/, 'Senha deve conter pelo menos uma letra maiúscula')
-      .regex(/\d/, 'Senha deve conter pelo menos um número')
-      .regex(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, 'Senha deve conter pelo menos um caractere especial'),
-    confirmPassword: z.string().min(1, 'Confirmação de senha é obrigatória'),
-    phone: z
-      .string()
-      .regex(/^\(\d{2}\)\s\d{4,5}-\d{4}$/, 'Telefone deve estar no formato (XX) XXXXX-XXXX')
-      .optional()
-      .or(z.literal('')),
-    terms: z.boolean().refine(val => val === true, 'Você deve aceitar os termos de uso'),
-  }).refine(data => data.password === data.confirmPassword, {
-    message: 'Senhas não coincidem',
-    path: ['confirmPassword'],
-  }),
+  register: z
+    .object({
+      name: z
+        .string()
+        .min(2, 'Nome deve ter pelo menos 2 caracteres')
+        .max(100, 'Nome deve ter no máximo 100 caracteres')
+        .regex(/^[a-zA-ZÀ-ÿ\s]+$/, 'Nome deve conter apenas letras e espaços'),
+      email: z.string().email('Email inválido').min(1, 'Email é obrigatório'),
+      password: z
+        .string()
+        .min(8, 'Senha deve ter pelo menos 8 caracteres')
+        .regex(/[a-z]/, 'Senha deve conter pelo menos uma letra minúscula')
+        .regex(/[A-Z]/, 'Senha deve conter pelo menos uma letra maiúscula')
+        .regex(/\d/, 'Senha deve conter pelo menos um número')
+        .regex(
+          /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/,
+          'Senha deve conter pelo menos um caractere especial'
+        ),
+      confirmPassword: z.string().min(1, 'Confirmação de senha é obrigatória'),
+      phone: z
+        .string()
+        .regex(
+          /^\(\d{2}\)\s\d{4,5}-\d{4}$/,
+          'Telefone deve estar no formato (XX) XXXXX-XXXX'
+        )
+        .optional()
+        .or(z.literal('')),
+      terms: z
+        .boolean()
+        .refine(val => val === true, 'Você deve aceitar os termos de uso'),
+    })
+    .refine(data => data.password === data.confirmPassword, {
+      message: 'Senhas não coincidem',
+      path: ['confirmPassword'],
+    }),
 
   forgotPassword: z.object({
     email: z.string().email('Email inválido').min(1, 'Email é obrigatório'),
   }),
 
-  resetPassword: z.object({
-    password: z
-      .string()
-      .min(8, 'Senha deve ter pelo menos 8 caracteres')
-      .regex(/[a-z]/, 'Senha deve conter pelo menos uma letra minúscula')
-      .regex(/[A-Z]/, 'Senha deve conter pelo menos uma letra maiúscula')
-      .regex(/\d/, 'Senha deve conter pelo menos um número')
-      .regex(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, 'Senha deve conter pelo menos um caractere especial'),
-    confirmPassword: z.string().min(1, 'Confirmação de senha é obrigatória'),
-  }).refine(data => data.password === data.confirmPassword, {
-    message: 'Senhas não coincidem',
-    path: ['confirmPassword'],
-  }),
+  resetPassword: z
+    .object({
+      password: z
+        .string()
+        .min(8, 'Senha deve ter pelo menos 8 caracteres')
+        .regex(/[a-z]/, 'Senha deve conter pelo menos uma letra minúscula')
+        .regex(/[A-Z]/, 'Senha deve conter pelo menos uma letra maiúscula')
+        .regex(/\d/, 'Senha deve conter pelo menos um número')
+        .regex(
+          /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/,
+          'Senha deve conter pelo menos um caractere especial'
+        ),
+      confirmPassword: z.string().min(1, 'Confirmação de senha é obrigatória'),
+    })
+    .refine(data => data.password === data.confirmPassword, {
+      message: 'Senhas não coincidem',
+      path: ['confirmPassword'],
+    }),
 
-  changePassword: z.object({
-    currentPassword: z.string().min(1, 'Senha atual é obrigatória'),
-    newPassword: z
-      .string()
-      .min(8, 'Nova senha deve ter pelo menos 8 caracteres')
-      .regex(/[a-z]/, 'Nova senha deve conter pelo menos uma letra minúscula')
-      .regex(/[A-Z]/, 'Nova senha deve conter pelo menos uma letra maiúscula')
-      .regex(/\d/, 'Nova senha deve conter pelo menos um número')
-      .regex(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, 'Nova senha deve conter pelo menos um caractere especial'),
-    confirmNewPassword: z.string().min(1, 'Confirmação da nova senha é obrigatória'),
-  }).refine(data => data.newPassword === data.confirmNewPassword, {
-    message: 'Senhas não coincidem',
-    path: ['confirmNewPassword'],
-  }),
+  changePassword: z
+    .object({
+      currentPassword: z.string().min(1, 'Senha atual é obrigatória'),
+      newPassword: z
+        .string()
+        .min(8, 'Nova senha deve ter pelo menos 8 caracteres')
+        .regex(/[a-z]/, 'Nova senha deve conter pelo menos uma letra minúscula')
+        .regex(/[A-Z]/, 'Nova senha deve conter pelo menos uma letra maiúscula')
+        .regex(/\d/, 'Nova senha deve conter pelo menos um número')
+        .regex(
+          /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/,
+          'Nova senha deve conter pelo menos um caractere especial'
+        ),
+      confirmNewPassword: z
+        .string()
+        .min(1, 'Confirmação da nova senha é obrigatória'),
+    })
+    .refine(data => data.newPassword === data.confirmNewPassword, {
+      message: 'Senhas não coincidem',
+      path: ['confirmNewPassword'],
+    }),
 
   updateProfile: z.object({
     name: z
@@ -76,10 +103,17 @@ export const authSchemas = {
       .regex(/^[a-zA-ZÀ-ÿ\s]+$/, 'Nome deve conter apenas letras e espaços'),
     phone: z
       .string()
-      .regex(/^\(\d{2}\)\s\d{4,5}-\d{4}$/, 'Telefone deve estar no formato (XX) XXXXX-XXXX')
+      .regex(
+        /^\(\d{2}\)\s\d{4,5}-\d{4}$/,
+        'Telefone deve estar no formato (XX) XXXXX-XXXX'
+      )
       .optional()
       .or(z.literal('')),
-    avatar: z.string().url('URL do avatar inválida').optional().or(z.literal('')),
+    avatar: z
+      .string()
+      .url('URL do avatar inválida')
+      .optional()
+      .or(z.literal('')),
   }),
 };
 
@@ -133,20 +167,26 @@ export function useForm<T extends FieldValues>(
 }
 
 // Hooks específicos para cada formulário
-export const useLoginForm = (options?: Omit<UseFormProps<LoginFormData>, 'resolver'>) =>
-  useForm(authSchemas.login, options);
+export const useLoginForm = (
+  options?: Omit<UseFormProps<LoginFormData>, 'resolver'>
+) => useForm<LoginFormData>(authSchemas.login, options);
 
-export const useRegisterForm = (options?: Omit<UseFormProps<RegisterFormData>, 'resolver'>) =>
-  useForm(authSchemas.register, options);
+export const useRegisterForm = (
+  options?: Omit<UseFormProps<RegisterFormData>, 'resolver'>
+) => useForm<RegisterFormData>(authSchemas.register, options);
 
-export const useForgotPasswordForm = (options?: Omit<UseFormProps<ForgotPasswordFormData>, 'resolver'>) =>
-  useForm(authSchemas.forgotPassword, options);
+export const useForgotPasswordForm = (
+  options?: Omit<UseFormProps<ForgotPasswordFormData>, 'resolver'>
+) => useForm<ForgotPasswordFormData>(authSchemas.forgotPassword, options);
 
-export const useResetPasswordForm = (options?: Omit<UseFormProps<ResetPasswordFormData>, 'resolver'>) =>
-  useForm(authSchemas.resetPassword, options);
+export const useResetPasswordForm = (
+  options?: Omit<UseFormProps<ResetPasswordFormData>, 'resolver'>
+) => useForm<ResetPasswordFormData>(authSchemas.resetPassword, options);
 
-export const useChangePasswordForm = (options?: Omit<UseFormProps<ChangePasswordFormData>, 'resolver'>) =>
-  useForm(authSchemas.changePassword, options);
+export const useChangePasswordForm = (
+  options?: Omit<UseFormProps<ChangePasswordFormData>, 'resolver'>
+) => useForm<ChangePasswordFormData>(authSchemas.changePassword, options);
 
-export const useUpdateProfileForm = (options?: Omit<UseFormProps<UpdateProfileFormData>, 'resolver'>) =>
-  useForm(authSchemas.updateProfile, options);
+export const useUpdateProfileForm = (
+  options?: Omit<UseFormProps<UpdateProfileFormData>, 'resolver'>
+) => useForm<UpdateProfileFormData>(authSchemas.updateProfile, options);

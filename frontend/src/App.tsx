@@ -1,5 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/contexts/AuthContext';
 import ProtectedRoute from '@/components/layout/ProtectedRoute';
@@ -13,24 +18,25 @@ import { CreateBarbershopPage } from '@/pages/barbershops/CreateBarbershopPage';
 
 // Componente para redirecionar usuários autenticados
 const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const isAuthenticated = localStorage.getItem('accessToken') && localStorage.getItem('user');
-  
+  const isAuthenticated =
+    localStorage.getItem('accessToken') && localStorage.getItem('user');
+
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to='/dashboard' replace />;
   }
-  
+
   return <>{children}</>;
 };
 
 // Página de erro 404
 const NotFoundPage: React.FC = () => (
-  <div className="min-h-screen flex items-center justify-center bg-secondary-50">
-    <div className="text-center">
-      <h1 className="text-6xl font-bold text-secondary-900">404</h1>
-      <p className="mt-4 text-xl text-secondary-600">Página não encontrada</p>
+  <div className='min-h-screen flex items-center justify-center bg-secondary-50'>
+    <div className='text-center'>
+      <h1 className='text-6xl font-bold text-secondary-900'>404</h1>
+      <p className='mt-4 text-xl text-secondary-600'>Página não encontrada</p>
       <a
-        href="/dashboard"
-        className="mt-6 inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+        href='/dashboard'
+        className='mt-6 inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors'
       >
         Voltar ao Dashboard
       </a>
@@ -40,14 +46,16 @@ const NotFoundPage: React.FC = () => (
 
 // Página de acesso negado
 const UnauthorizedPage: React.FC = () => (
-  <div className="min-h-screen flex items-center justify-center bg-secondary-50">
-    <div className="text-center">
-      <h1 className="text-6xl font-bold text-secondary-900">403</h1>
-      <p className="mt-4 text-xl text-secondary-600">Acesso negado</p>
-      <p className="mt-2 text-secondary-500">Você não tem permissão para acessar esta página</p>
+  <div className='min-h-screen flex items-center justify-center bg-secondary-50'>
+    <div className='text-center'>
+      <h1 className='text-6xl font-bold text-secondary-900'>403</h1>
+      <p className='mt-4 text-xl text-secondary-600'>Acesso negado</p>
+      <p className='mt-2 text-secondary-500'>
+        Você não tem permissão para acessar esta página
+      </p>
       <a
-        href="/dashboard"
-        className="mt-6 inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+        href='/dashboard'
+        className='mt-6 inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors'
       >
         Voltar ao Dashboard
       </a>
@@ -59,11 +67,11 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <div className="App">
+        <div className='App'>
           <Routes>
             {/* Rotas públicas */}
             <Route
-              path="/login"
+              path='/login'
               element={
                 <PublicRoute>
                   <LoginPage />
@@ -71,7 +79,7 @@ function App() {
               }
             />
             <Route
-              path="/register"
+              path='/register'
               element={
                 <PublicRoute>
                   <RegisterPage />
@@ -81,7 +89,7 @@ function App() {
 
             {/* Rotas protegidas */}
             <Route
-              path="/dashboard"
+              path='/dashboard'
               element={
                 <ProtectedRoute>
                   <DashboardPage />
@@ -91,7 +99,7 @@ function App() {
 
             {/* Rotas de Barbearias */}
             <Route
-              path="/barbershops"
+              path='/barbershops'
               element={
                 <ProtectedRoute>
                   <BarbershopsPage />
@@ -99,7 +107,7 @@ function App() {
               }
             />
             <Route
-              path="/barbershops/new"
+              path='/barbershops/new'
               element={
                 <ProtectedRoute requiredRoles={['ADMIN', 'SUPER_ADMIN']}>
                   <CreateBarbershopPage />
@@ -108,25 +116,23 @@ function App() {
             />
 
             {/* Rota raiz - redireciona para dashboard se autenticado, senão para login */}
-            <Route
-              path="/"
-              element={<Navigate to="/dashboard" replace />}
-            />
+            <Route path='/' element={<Navigate to='/dashboard' replace />} />
 
             {/* Páginas de erro */}
-            <Route path="/unauthorized" element={<UnauthorizedPage />} />
-            <Route path="*" element={<NotFoundPage />} />
+            <Route path='/unauthorized' element={<UnauthorizedPage />} />
+            <Route path='*' element={<NotFoundPage />} />
           </Routes>
 
           {/* Toast notifications */}
           <Toaster
-            position="top-right"
+            position='top-right'
             toastOptions={{
               duration: 4000,
               style: {
                 background: '#fff',
                 color: '#374151',
-                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                boxShadow:
+                  '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                 border: '1px solid #e5e7eb',
                 borderRadius: '0.75rem',
                 padding: '16px',
