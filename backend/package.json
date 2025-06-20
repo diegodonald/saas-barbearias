@@ -20,7 +20,7 @@
     "db:seed": "tsx src/prisma/seed.ts",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset",
-    "type-check": "tsc --noEmit --skipLibCheck",
+    "type-check": "tsc --noEmit --project tsconfig.typecheck.json",
     "format:check": "prettier --check \"src/**/*.{js,ts,json}\"",
     "ci": "npm run lint && npm run type-check && npm run test",
     "ci:coverage": "npm run lint && npm run type-check && npm run test:coverage"
