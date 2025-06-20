@@ -264,7 +264,7 @@ class CacheService {
   ): Promise<Record<string, T | null>> {
     if (!redis) {
       const result: Record<string, T | null> = {};
-      keys.forEach(key => {
+      keys.forEach((key) => {
         result[key] = null;
         this.stats.misses++;
       });

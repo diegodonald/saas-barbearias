@@ -126,8 +126,8 @@ export function CacheEvict(
         advancedLogger.warn('Erro ao invalidar cache', {
           metadata: {
             method: `${target.constructor.name}.${propertyName}`,
-            error: (cacheError as Error).message
-          }
+            error: (cacheError as Error).message,
+          },
         });
       }
 

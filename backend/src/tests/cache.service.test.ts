@@ -57,6 +57,7 @@ describe('CacheService', () => {
     mockRedis = new Redis();
 
     // Simular que o Redis está disponível
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const redisModule = require('../config/redis');
     redisModule.redis = mockRedis;
   });
