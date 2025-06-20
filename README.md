@@ -2,6 +2,24 @@
 
 Sistema completo de gestão e agendamento online para barbearias, salões de beleza e estúdios de tatuagem.
 
+## 🚀 Status do Projeto
+
+**🟢 Fase 2 Concluída** - Sistema de autenticação e autorização funcionando end-to-end
+**📊 Progresso Geral**: 92.9% das funcionalidades base implementadas
+
+### ✅ Funcionalidades Implementadas
+- ✅ Sistema de autenticação JWT completo (Access + Refresh Tokens)
+- ✅ Frontend React com TypeScript e Tailwind CSS
+- ✅ Backend Node.js com Express e validação Zod
+- ✅ Banco PostgreSQL com Prisma ORM
+- ✅ Testes automatizados (>80% cobertura) - Jest + Playwright
+- ✅ CI/CD com GitHub Actions
+- ✅ Docker para desenvolvimento
+- ✅ Documentação Swagger/OpenAPI
+- ✅ Sistema automatizado de controle de progresso
+- ✅ Logging estruturado com Winston
+- ✅ Rate limiting e segurança (Helmet, CORS)
+
 ## 🚀 Funcionalidades Principais
 
 ### ✨ Para Clientes
@@ -105,6 +123,30 @@ npm run test:e2e
 npm run test:coverage
 ```
 
+## 🔄 Controle de Versionamento
+
+Este projeto utiliza um fluxo de trabalho Git estruturado com automação de checklist:
+
+### 📋 Scripts Automatizados
+```bash
+# Atualizar checklist automaticamente
+npm run checklist:update
+
+# Validar critérios de aceite de uma fase
+npm run validate:phase1  # ou phase2
+npm run validate:all
+
+# Gerar relatório detalhado
+npm run checklist:report
+```
+
+### 🔀 Fluxo de Trabalho Git
+1. **Desenvolvimento**: Trabalhe em branches de feature
+2. **Commit**: Hooks automáticos atualizam o checklist
+3. **Push**: CI/CD executa testes e validações
+4. **Pull Request**: Review obrigatório antes do merge
+5. **Deploy**: Automático após merge na main
+
 ## 📚 Documentação
 
 - [📋 Checklist de Desenvolvimento](./checklist_desenvolvimento.md)
@@ -123,6 +165,9 @@ npm run test:coverage
 | `npm run format` | Formatação com Prettier |
 | `npm run db:migrate` | Executa migrações |
 | `npm run db:seed` | Popula banco com dados iniciais |
+| `npm run checklist:update` | Atualiza checklist automaticamente |
+| `npm run validate:all` | Valida todas as fases |
+| `npm run checklist:report` | Gera relatório detalhado |
 
 ## 🌟 Funcionalidades Únicas
 
