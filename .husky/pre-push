@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🧪 Executando testes antes do push..."
+
+# Executar testes unitários
+npm test --workspaces
+
+echo "✅ Testes concluídos com sucesso!"

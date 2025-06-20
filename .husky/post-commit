@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Hook executado após cada commit
+# Atualiza automaticamente o checklist de desenvolvimento
+
+echo "🔄 Atualizando checklist de desenvolvimento..."
+
+# Executar script de atualização do checklist
+node scripts/update-checklist.js
+
+# Se houve mudanças no checklist, fazer commit automático
+if [ -n "$(git status --porcelain checklist_desenvolvimento.md)" ]; then
+  echo "📝 Checklist atualizado automaticamente"
+  git add checklist_desenvolvimento.md
+  git commit -m "chore: atualizar checklist automaticamente [skip ci]"
+fi
+
+echo "✅ Checklist verificado e atualizado"
