@@ -110,10 +110,11 @@ export const commonSchemas = {
 
   // Telefone válido (formato brasileiro)
   phone: z
-    .string()
-    .regex(/^\(\d{2}\)\s\d{4,5}-\d{4}$/, 'Telefone deve estar no formato (XX) XXXXX-XXXX')
-    .optional()
-    .or(z.literal('')),
+    .union([
+      z.string().regex(/^\(\d{2}\)\s\d{4,5}-\d{4}$/, 'Telefone deve estar no formato (XX) XXXXX-XXXX'),
+      z.literal(''),
+    ])
+    .optional(),
 
   // URL válida
   url: z.string().url('URL inválida').optional(),
