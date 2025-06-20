@@ -8,6 +8,8 @@ import ProtectedRoute from '@/components/layout/ProtectedRoute';
 import LoginPage from '@/pages/auth/LoginPage';
 import RegisterPage from '@/pages/auth/RegisterPage';
 import DashboardPage from '@/pages/DashboardPage';
+import { BarbershopsPage } from '@/pages/barbershops/BarbershopsPage';
+import { CreateBarbershopPage } from '@/pages/barbershops/CreateBarbershopPage';
 
 // Componente para redirecionar usuários autenticados
 const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -83,6 +85,24 @@ function App() {
               element={
                 <ProtectedRoute>
                   <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Rotas de Barbearias */}
+            <Route
+              path="/barbershops"
+              element={
+                <ProtectedRoute>
+                  <BarbershopsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/barbershops/new"
+              element={
+                <ProtectedRoute requiredRoles={['ADMIN', 'SUPER_ADMIN']}>
+                  <CreateBarbershopPage />
                 </ProtectedRoute>
               }
             />
