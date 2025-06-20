@@ -111,7 +111,9 @@ export const commonSchemas = {
   // Telefone válido (formato brasileiro)
   phone: z
     .union([
-      z.string().regex(/^\(\d{2}\)\s\d{4,5}-\d{4}$/, 'Telefone deve estar no formato (XX) XXXXX-XXXX'),
+      z
+        .string()
+        .regex(/^\(\d{2}\)\s\d{4,5}-\d{4}$/, 'Telefone deve estar no formato (XX) XXXXX-XXXX'),
       z.literal(''),
     ])
     .optional(),
