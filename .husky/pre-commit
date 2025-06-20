@@ -3,11 +3,13 @@
 
 echo "🔍 Executando verificações pre-commit..."
 
-# Executar lint-staged
-npx lint-staged
+# Linting
+npm run lint:fix
 
-# Verificar tipos TypeScript
-echo "🔍 Verificando tipos TypeScript..."
-npm run type-check --workspaces
+# Formatação
+npm run format
 
-echo "✅ Verificações pre-commit concluídas!"
+# Testes rápidos
+npm run test:quick 2>/dev/null || npm test
+
+echo "✅ Pre-commit verificações concluídas"

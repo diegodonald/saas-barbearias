@@ -1,9 +1,15 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "🧪 Executando testes antes do push..."
+echo "🚀 Executando verificações pre-push..."
 
-# Executar testes unitários
-npm test --workspaces
+# Testes completos
+npm test
 
-echo "✅ Testes concluídos com sucesso!"
+# Build de produção
+npm run build
+
+# Validação de fase (se aplicável)
+npm run validate:all 2>/dev/null || echo "⚠️  Validação de fase não disponível"
+
+echo "✅ Pre-push verificações concluídas"

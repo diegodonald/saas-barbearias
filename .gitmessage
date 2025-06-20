@@ -1,0 +1,20 @@
+# Tipo(escopo): descrição breve
+#
+# Tipos disponíveis:
+# feat:     Nova funcionalidade
+# fix:      Correção de bug
+# docs:     Documentação
+# style:    Formatação (sem mudança de código)
+# refactor: Refatoração de código
+# test:     Adição ou correção de testes
+# chore:    Tarefas de manutenção
+#
+# Exemplo:
+# feat(auth): implementar sistema de refresh tokens
+#
+# Descrição detalhada (opcional):
+# - ✅ Item implementado
+# - 🔧 Item configurado
+# - 📝 Item documentado
+#
+# Closes #123

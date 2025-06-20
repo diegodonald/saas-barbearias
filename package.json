@@ -36,7 +36,9 @@
     "checklist:report": "node scripts/validate-phase.js report",
     "validate:phase1": "node scripts/validate-phase.js FASE_1",
     "validate:phase2": "node scripts/validate-phase.js FASE_2",
-    "validate:all": "node scripts/validate-phase.js all"
+    "validate:all": "node scripts/validate-phase.js all",
+    "git:setup": "node scripts/setup-git-workflow.js",
+    "git:validate": "node scripts/setup-git-workflow.js --validate"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",

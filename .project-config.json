@@ -1,0 +1,25 @@
+{
+  "project": {
+    "name": "SaaS Barbearias",
+    "version": "1.0.0",
+    "repository": "https://github.com/diegodonald/saas-barbearias.git"
+  },
+  "git": {
+    "mainBranch": "main",
+    "developmentBranch": "development",
+    "featurePrefix": "feature/",
+    "bugfixPrefix": "bugfix/",
+    "hotfixPrefix": "hotfix/"
+  },
+  "automation": {
+    "checklistUpdate": true,
+    "autoValidation": true,
+    "progressTracking": true
+  },
+  "quality": {
+    "minTestCoverage": 80,
+    "requireLinting": true,
+    "requireFormatting": true,
+    "requireBuild": true
+  }
+}
