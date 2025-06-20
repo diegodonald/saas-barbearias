@@ -78,7 +78,7 @@ const ACCEPTANCE_CRITERIA = {
         name: 'Rotas protegidas funcionando',
         validator: () => {
           const protectedRoute = path.join(__dirname, '..', 'frontend', 'src', 'components', 'layout', 'ProtectedRoute.tsx');
-          const authMiddleware = path.join(__dirname, '..', 'backend', 'src', 'middleware', 'auth.middleware.ts');
+          const authMiddleware = path.join(__dirname, '..', 'backend', 'src', 'middleware', 'auth.ts');
           return fs.existsSync(protectedRoute) && fs.existsSync(authMiddleware);
         }
       }
